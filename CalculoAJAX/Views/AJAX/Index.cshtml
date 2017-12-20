@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "Cálculo via AJAX";
+}
+
+<h2>Index</h2>
+
+@using (Html.BeginForm())
+{
+    <p>@Html.TextBox("txtNumero", null, new { @class = "form-control", placeholder = "Insira um valor", tabindex = 1 })</p>
+    <p><input type="button" value="Cálcular" id="btnCalcula" class="btn btn-primary" /></p>
+    <p><label id="lblMensagem"></label></p>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#btnCalcula").on("click", function () {
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: "@Url.Action("JsonFatorial")",
+                        data: { n: $("#txtNumero").val() },
+                        datatype: 'JSON',
+                        cache: false
+                    })
+                    .success(function (data)
+                    {
+                        $("#lblMensagem").html("Resultado: " + data.Fatorial);
+                    })
+                    .error(function()
+                    {
+                        $("#lblMensagem").html("Error ao processar cálculo.");
+                    })
+            });
+        });
+    </script>
+}
